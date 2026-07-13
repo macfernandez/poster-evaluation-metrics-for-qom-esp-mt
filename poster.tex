@@ -1,0 +1,256 @@
+%=============================================================
+%  Póster — Escuela de NLP de Sudamérica (2ª edición)
+%  "Métricas de evaluación para traducción automática qom-español:
+%   líneas de base, limitaciones y hoja de ruta"
+%
+%  Estilo: beamerposter con bloques (inspirado en el template de TU Dublin).
+%  Compilar con: pdfLaTeX  (Overleaf: Menu -> Compiler -> pdfLaTeX)
+%
+%  >>> ESTE ES UN DRAFT CON PLACEHOLDERS <<<
+%  El texto entre corchetes [ ... ] y en gris indica qué va en cada bloque.
+%  Reemplazá los placeholders por el contenido real más adelante.
+%=============================================================
+\documentclass[final]{beamer}
+
+% ---- Tamaño y orientación del póster --------------------------------
+\usepackage[orientation=portrait,size=a0,scale=1.25]{beamerposter}
+
+% ---- Idioma y tipografía --------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noindentfirst]{babel}
+\usepackage{lmodern}
+
+% ---- Utilidades -----------------------------------------------------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+%=============================================================
+%  PALETA DE COLORES  (cambiá acá para retocar todo el póster)
+%=============================================================
+\definecolor{posterMain}{HTML}{0B4F6C}   % azul petróleo (barras y títulos)
+\definecolor{posterAccent}{HTML}{C1121F} % rojo acento (destacados)
+\definecolor{blockBg}{HTML}{F2F4F5}      % gris muy claro (fondo de bloques)
+\definecolor{textDark}{HTML}{1A1A1A}
+\definecolor{ph}{HTML}{8A8A8A}           % gris para el texto placeholder
+
+% Comando para marcar contenido pendiente (placeholder)
+\newcommand{\ph}[1]{{\color{ph}\itshape [#1]}}
+
+%=============================================================
+%  ESTILO DE LOS BLOQUES  (look "TU Dublin": título en barra de color)
+%=============================================================
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{block title}{fg=white,bg=posterMain}
+\setbeamercolor{block body}{fg=textDark,bg=blockBg}
+\setbeamerfont{block title}{series=\bfseries,size=\large}
+\setbeamertemplate{block begin}{
+  \vskip1ex
+  \begin{beamercolorbox}[leftskip=1.2cm,colsep*=.75ex]{block title}
+    \usebeamerfont{block title}\insertblocktitle
+  \end{beamercolorbox}
+  \nointerlineskip
+  \usebeamerfont{block body}
+  \begin{beamercolorbox}[leftskip=1cm,rightskip=1cm,vmode]{block body}
+    \vskip1ex\justifying
+}
+\setbeamertemplate{block end}{
+    \vskip1ex
+  \end{beamercolorbox}
+  \vskip1ex
+}
+\setbeamertemplate{itemize items}[triangle]
+\setbeamercolor{itemize item}{fg=posterAccent}
+\setbeamercolor{itemize subitem}{fg=posterMain}
+
+% Caja de destacado (para el dato-gancho de AmericasNLP)
+\newcommand{\highlightbox}[1]{%
+  \begin{beamercolorbox}[sep=0.6cm,rounded=true]{block title}%
+    \centering\bfseries #1%
+  \end{beamercolorbox}%
+}
+
+% Caja de logo placeholder (borrar cuando pongas el logo real)
+\newcommand{\logoplaceholder}[2]{%
+  \begin{tikzpicture}
+    \draw[posterMain,thick,dashed] (0,0) rectangle (#1,#2);
+    \node[ph,align=center] at (#1/2,#2/2) {[Logo]};
+  \end{tikzpicture}%
+}
+
+%=============================================================
+\begin{document}
+\begin{frame}[t]
+
+%------------------------------------------------------------
+%  ENCABEZADO
+%------------------------------------------------------------
+\begin{beamercolorbox}[wd=\paperwidth,sep=1.2cm]{block title}
+  \begin{columns}[c]
+    \begin{column}{0.16\paperwidth}
+      \centering
+      % \includegraphics[width=0.7\linewidth]{figures/uba.pdf}  % <- activar con logo en PDF/PNG
+      \logoplaceholder{6}{6}
+    \end{column}
+    \begin{column}{0.66\paperwidth}
+      \centering
+      {\veryHuge\bfseries Métricas de evaluación para traducción\\[0.3ex]
+       automática qom\,$\leftrightarrow$\,español\par}
+      \vspace{0.6cm}
+      {\LARGE Líneas de base, limitaciones y una hoja de ruta\par}
+      \vspace{0.9cm}
+      {\Large\bfseries Macarena Fernández Urquiza\par}
+      \vspace{0.2cm}
+      {\large Directora: Viviana Cotik \quad$\vert$\quad Codirectora: Paola Cúneo\par}
+      \vspace{0.2cm}
+      {\large Maestría en Exploración de Datos y Descubrimiento del Conocimiento — FCEN, UBA\par}
+    \end{column}
+    \begin{column}{0.16\paperwidth}
+      \centering
+      % \includegraphics[width=0.7\linewidth]{figures/master.pdf} % <- activar con logo en PDF/PNG
+      \logoplaceholder{6}{6}
+    \end{column}
+  \end{columns}
+\end{beamercolorbox}
+
+\vspace{1.2cm}
+
+%------------------------------------------------------------
+%  CUERPO A DOS COLUMNAS
+%------------------------------------------------------------
+\begin{columns}[t]
+
+%======================= COLUMNA IZQUIERDA =======================
+\begin{column}{0.47\paperwidth}
+
+  \begin{block}{1. Motivación y contexto}
+    \ph{2--3 viñetas cortas. El pueblo qom (Gran Chaco, ~80.000 hablantes),
+        lengua en retracción, escasos recursos digitales. Por qué evaluar
+        bien la traducción importa para documentar y revitalizar la lengua.}
+    \begin{itemize}
+      \item \ph{dato demográfico / sociolingüístico}
+      \item \ph{por qué la traducción automática es relevante acá}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{2. El problema}
+    \ph{Por qué las métricas estándar de superficie no alcanzan para lenguas
+        indígenas: morfología polisintética/aglutinante, orden de palabras
+        variable (SVO/VS), ortografía no estandarizada.}
+    \vspace{0.5cm}
+    \highlightbox{\ph{Gancho AmericasNLP 2025: ChrF++ correlaciona $\sim$0{,}52 con
+      juicios humanos; lo neuronal llega a $\sim$0{,}67}}
+    \vspace{0.4cm}
+    \begin{itemize}
+      \item \ph{qué rompe la polisíntesis en las métricas de n-gramas}
+      \item \ph{qué rompe la variación ortográfica}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{3. Pregunta y objetivo}
+    \ph{¿Qué tan confiables son las métricas automáticas para el par
+        qom-español? Objetivo: evaluar el modelo existente y diagnosticar
+        DÓNDE y POR QUÉ las métricas divergen de la calidad real.}
+  \end{block}
+
+  \begin{block}{4. Datos y método}
+    \ph{Diagrama de flujo del pipeline (ver placeholder abajo).}
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        node distance=0.9cm,
+        box/.style={draw=posterMain,very thick,rounded corners,fill=white,
+                    align=center,minimum height=2.2cm,text width=6cm,font=\large}]
+      \node[box] (corpus) {Corpus\\\textit{QomL'aqtaqa}};
+      \node[box,right=of corpus] (model) {Modelo\\NLLB fine-tuneado};
+      \node[box,right=of model] (pred) {Predicciones\\qom$\leftrightarrow$es};
+      \draw[-latex,very thick,posterMain] (corpus) -- (model);
+      \draw[-latex,very thick,posterMain] (model) -- (pred);
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.3cm}
+    \begin{itemize}
+      \item \textbf{Métricas de n-gramas:} \ph{BLEU, ChrF++}
+      \item \textbf{Métricas por \textit{embeddings}:} \ph{BERTScore, MoverScore}
+      \item \textbf{Análisis cualitativo:} \ph{casos donde la métrica y la calidad divergen}
+    \end{itemize}
+  \end{block}
+
+\end{column}
+
+%======================= COLUMNA DERECHA =======================
+\begin{column}{0.47\paperwidth}
+
+  \begin{block}{5. Resultados (parciales)}
+    \ph{Tabla con BLEU y ChrF++ por dirección de traducción. Reemplazar los
+        valores cuando termines de calcularlos.}
+    \vspace{0.5cm}
+    \begin{center}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabularx}{0.85\linewidth}{Xcc}
+      \toprule
+      \textbf{Dirección} & \textbf{BLEU} & \textbf{ChrF++} \\
+      \midrule
+      qom $\rightarrow$ español & \ph{--} & \ph{--} \\
+      español $\rightarrow$ qom & \ph{--} & \ph{--} \\
+      \bottomrule
+    \end{tabularx}
+    \end{center}
+    \vspace{0.6cm}
+    \textbf{Ejemplo cualitativo (tu argumento más fuerte):}
+    \vspace{0.3cm}
+    \begin{beamercolorbox}[sep=0.5cm,rounded=true]{block body}
+      \ph{Referencia vs. predicción donde la métrica castiga una traducción
+          que en realidad es correcta (variación ortográfica / sinónimo /
+          reordenamiento). Mostrar 1 o 2 ejemplos.}
+    \end{beamercolorbox}
+  \end{block}
+
+  \begin{block}{6. Propuesta}
+    \ph{Guía de anotación adaptada al qom, siguiendo la metodología de
+        semántica/fluidez de la Shared Task 3 de AmericasNLP 2025.}
+    \begin{itemize}
+      \item \ph{qué dimensiones se anotan (adecuación / fluidez)}
+      \item \ph{cómo se adapta a la tipología del qom y al perfil de los hablantes}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{7. Hoja de ruta}
+    \ph{Hacia métricas basadas en embeddings entrenados sobre el par
+        qom-español.}
+    \begin{itemize}
+      \item \ph{reentrenar representaciones sobre qom-español}
+      \item \ph{combinar con similitud semántica (YiSi-1 / COMET)}
+      \item \ph{correlacionar con juicios humanos (Pearson/Spearman/Kendall)}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Contribuciones y contacto}
+    \begin{minipage}[c]{0.66\linewidth}
+      \begin{itemize}
+        \item \ph{contribución 1 (diagnóstico de métricas para qom)}
+        \item \ph{contribución 2 (guía de anotación)}
+        \item \ph{recursos liberados a la comunidad}
+      \end{itemize}
+      \vspace{0.4cm}
+      {\small \ph{Referencias clave: de Gibert et al. 2025; Popović 2017;
+        Zhang et al. 2019; NLLB Team 2022.} \par}
+      \vspace{0.3cm}
+      {\small \textbf{Contacto:} m.fernandezurquiza@gmail.com \par}
+    \end{minipage}\hfill
+    \begin{minipage}[c]{0.30\linewidth}
+      \centering
+      \logoplaceholder{6}{6}\\[0.3cm]
+      {\small \ph{QR al repo}}
+    \end{minipage}
+  \end{block}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+\end{document}
