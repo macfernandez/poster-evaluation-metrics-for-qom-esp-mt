@@ -1,0 +1,65 @@
+name: Sync from Murfy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Download project ZIP from Murfy
+        uses: macfernandez/sync-murfy@v1.0.1
+        id: murfy
+        with:
+          email: ${{ secrets.MURFY_EMAIL }}
+          password: ${{ secrets.MURFY_PASSWORD }}
+          project: ${{ secrets.MURFY_PROJECT }}
+
+      - name: Extract zip into poster/
+        run: |
+          rm -rf poster/
+          mkdir -p poster/ /tmp/murfy-extract
+          unzip "${{ steps.murfy.outputs.zip-path }}" -d /tmp/murfy-extract
+
+          # If the zip wraps everything in a single top-level directory, flatten it
+          ITEMS=$(ls -A /tmp/murfy-extract | wc -l)
+          FIRST=$(ls -A /tmp/murfy-extract | head -1)
+          if [ "$ITEMS" -eq 1 ] && [ -d "/tmp/murfy-extract/$FIRST" ]; then
+            cp -r "/tmp/murfy-extract/$FIRST/." poster/
+          else
+            cp -r /tmp/murfy-extract/. poster/
+          fi
+
+          find poster/ \( -name '.gitignore' -o -name '.project' \) -delete
+
+      - name: Open PR with changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          BRANCH="sync/murfy-$(date +%Y%m%d-%H%M%S)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A poster/
+
+          if git diff --cached --quiet; then
+            echo "No changes detected, skipping PR."
+            exit 0
+          fi
+
+          git commit -m "sync: update poster from Murfy ($DATE)"
+          git push -u origin "$BRANCH"
+
+          gh pr create \
+            --title "Sync poster from Murfy ($DATE)" \
+            --body "Automated sync of project \`${{ secrets.MURFY_PROJECT }}\` from Murfy." \
+            --base main \
+            --head "$BRANCH"
