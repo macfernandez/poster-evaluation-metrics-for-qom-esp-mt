@@ -105,16 +105,16 @@
      {\Large\bfseries Macarena Fernandez Urquiza\par}
      \vspace{0.15cm}
      {\large Supervisoras: Viviana Cotik y Paola Cúneo\par}
-     %\vspace{0.15cm}
-     %${\large Maestría en Exploración de Datos y Descubrimiento del Conocimiento — FCEN, UBA\par}
+     \vspace{0.15cm}
+     {\large Maestría en Exploración de Datos y Descubrimiento del Conocimiento — FCEN, UBA\par}
      %\vspace{0.15cm}
      %{\large m.fernandezurquiza@gmail.com\par}
     }
   \end{column}
   \begin{column}{0.24\paperwidth}
     \centering
-    \includegraphics[width=0.8po\linewidth]{figures/uba.eps}\hfill  % <- activar con logo en PDF/PNG
-    % \includegraphics[width=0.45\linewidth]{figures/master.pdf}
+    \includegraphics[width=0.8\linewidth]{figures/uba.pdf}\hfill
+    %\includegraphics[width=0.45\linewidth]{figures/master.pdf}
   \end{column}
 \end{columns}
 
@@ -125,19 +125,15 @@
 %------------------------------------------------------------
 %  BLOQUE ANCHO: MOTIVACIÓN
 %------------------------------------------------------------
-\begin{pblock}{1. Motivación y contexto}
-  \ph{2--3 viñetas cortas. El pueblo qom (Gran Chaco, ~80.000 hablantes),
-      lengua en retracción, escasos recursos digitales. Por qué evaluar
-      bien la traducción importa para documentar y revitalizar la lengua.}
-  \vspace{0.3cm}
+\begin{pblock}{1. Contexto}
   \begin{minipage}[t]{0.47\linewidth}
     \begin{itemize}
-      \item \ph{dato demográfico / sociolingüístico}
+      \item ph{tenemos un traductor andando (con diferentes sabores?-corpora para el par qom-español).}
     \end{itemize}
   \end{minipage}\hfill
   \begin{minipage}[t]{0.47\linewidth}
     \begin{itemize}
-      \item \ph{por qué la traducción automática es relevante acá}
+      \item ph{Cómo lo evaluamos?}
     \end{itemize}
   \end{minipage}
 \end{pblock}
@@ -153,7 +149,8 @@
 \begin{column}{0.47\paperwidth}
 
   \begin{pblock}{2. El problema}
-    \ph{Por qué las métricas estándar de superficie no alcanzan para lenguas
+    \ph{queremos ver cuál es la mejor forma de evaluar su calidad. Aclarar por qué es difícil/interesante esto.
+    Por qué las métricas estándar de superficie no alcanzan para lenguas
         indígenas: morfología polisintética/aglutinante, orden de palabras
         variable (SVO/VS), ortografía no estandarizada.}
     \vspace{0.5cm}
