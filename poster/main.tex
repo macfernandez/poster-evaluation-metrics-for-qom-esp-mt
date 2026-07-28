@@ -6,10 +6,6 @@
 %  Estilo: beamerposter con bloques redondeados al estilo del template
 %  de TU Dublin (fondo blanco, borde de color, barra de título en teal).
 %  Compilar con: pdfLaTeX  (Overleaf: Menu -> Compiler -> pdfLaTeX)
-%
-%  >>> ESTE ES UN DRAFT CON PLACEHOLDERS <<<
-%  El texto entre corchetes [ ... ] y en gris indica qué va en cada bloque.
-%  Reemplazá los placeholders por el contenido real más adelante.
 %=============================================================
 \documentclass[final]{beamer}
 
@@ -21,6 +17,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-noindentfirst]{babel}
 \usepackage{lmodern}
+\usepackage{makecell}
 
 % ---- Utilidades -----------------------------------------------------
 \usepackage{graphicx}
@@ -29,9 +26,10 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usepackage[most]{tcolorbox}
+\usepackage{amssymb}   % \checkmark para las tablas
 
 %=============================================================
-%  PALETA DE COLORES  (cambiá acá para retocar todo el póster)
+%  PALETA DE COLORES
 %  Tonos teal/azul al estilo TU Dublin.
 %=============================================================
 \definecolor{tudBlue}{HTML}{3A7CA5}    % teal: barras de título y acentos
@@ -42,6 +40,13 @@
 
 % Comando para marcar contenido pendiente (placeholder)
 \newcommand{\ph}[1]{{\color{ph}\itshape [#1]}}
+
+% Tilde de "incluido" para las tablas de corpus
+\newcommand{\yes}{{\color{tudBlue}\ensuremath{\checkmark}}}
+
+% Cita compacta al estilo poster: superindice numerico
+\newcommand{\cita}[2][tudBlue]{\textsuperscript{\color{#1}#2}}
+
 
 %=============================================================
 %  BLOQUES  (tcolorbox: caja redondeada, borde teal, título centrado)
@@ -70,6 +75,12 @@
   left=0.8cm, right=0.8cm, top=0.6cm, bottom=0.6cm,
 }
 
+% Caja interior clara (para ejemplos cualitativos)
+\newtcolorbox{pinner}{
+  enhanced, colback=white, colframe=tudBorder, boxrule=1.5pt,
+  arc=8pt, left=0.6cm, right=0.6cm, top=0.5cm, bottom=0.5cm,
+}
+
 % Viñetas en el tono del póster
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[triangle]
@@ -94,122 +105,252 @@
 %------------------------------------------------------------
 %  ENCABEZADO  (título a la izquierda, logos a la derecha)
 %------------------------------------------------------------
+\vspace{2cm}
 \begin{columns}[c]
-  \begin{column}{0.74\paperwidth}
+  \begin{column}{0.7\paperwidth}
     {\raggedright
      {\veryHuge\bfseries\color{tudDark} Métricas de evaluación para traducción
       automática qom\,$\leftrightarrow$\,español\par}
      \vspace{0.5cm}
      {\LARGE\color{tudBlue} \textit{Baselines}, limitaciones y una hoja de ruta\par}
      \vspace{0.8cm}
-     {\Large\bfseries Macarena Fernandez Urquiza\par}
+     {\Large\bfseries Macarena Fernandez Urquiza | m.fernandezurquiza@gmail.com\par}
      \vspace{0.15cm}
      {\large Supervisoras: Viviana Cotik y Paola Cúneo\par}
      \vspace{0.15cm}
      {\large Maestría en Exploración de Datos y Descubrimiento del Conocimiento — FCEN, UBA\par}
-     %\vspace{0.15cm}
-     %{\large m.fernandezurquiza@gmail.com\par}
     }
   \end{column}
   \begin{column}{0.24\paperwidth}
     \centering
-    \includegraphics[width=0.8\linewidth]{figures/uba.pdf}\hfill
-    %\includegraphics[width=0.45\linewidth]{figures/master.pdf}
+    % Si existe el logo en PDF/PNG lo usa; si no, muestra un placeholder
+    \IfFileExists{figures/uba.png}%
+      {\includegraphics[width=0.9\linewidth]{figures/uba.png}}%
+      {\logoplaceholder{6}{6}}
   \end{column}
 \end{columns}
 
-\vspace{0.4cm}
-{\color{tudBorder}\rule{\linewidth}{3pt}}
 \vspace{1cm}
-
-%------------------------------------------------------------
-%  BLOQUE ANCHO: MOTIVACIÓN
-%------------------------------------------------------------
-\begin{pblock}{1. Contexto}
-  \begin{minipage}[t]{0.47\linewidth}
-    \begin{itemize}
-      \item ph{tenemos un traductor andando (con diferentes sabores?-corpora para el par qom-español).}
-    \end{itemize}
-  \end{minipage}\hfill
-  \begin{minipage}[t]{0.47\linewidth}
-    \begin{itemize}
-      \item ph{Cómo lo evaluamos?}
-    \end{itemize}
-  \end{minipage}
-\end{pblock}
-
-\blockgap
+{\color{tudBorder}\rule{\linewidth}{3pt}}
 
 %------------------------------------------------------------
 %  CUERPO A DOS COLUMNAS
+%  (onlytextwidth = ancho total \textwidth, para que los bloques de
+%   columnas queden alineados con los bloques anchos)
 %------------------------------------------------------------
-\begin{columns}[t]
+\begin{columns}[t,onlytextwidth]
 
 %======================= COLUMNA IZQUIERDA =======================
-\begin{column}{0.47\paperwidth}
+\begin{column}{0.48\textwidth}
 
-  \begin{pblock}{2. El problema}
-    \ph{queremos ver cuál es la mejor forma de evaluar su calidad. Aclarar por qué es difícil/interesante esto.
-    Por qué las métricas estándar de superficie no alcanzan para lenguas
-        indígenas: morfología polisintética/aglutinante, orden de palabras
-        variable (SVO/VS), ortografía no estandarizada.}
-    \vspace{0.5cm}
-    \begin{phighlight}
-      \ph{Gancho AmericasNLP 2025: ChrF++ correlaciona $\sim$0{,}52 con
-      juicios humanos; lo neuronal llega a $\sim$0{,}67}
-    \end{phighlight}
+  \begin{pblock}{1. Motivación}
+    \begin{itemize}
+      \item Comunidad \textbf{qom} (toba); $\sim$80.000 hablantes.
+      \item Región del \textbf{Gran Chaco} (norte argentino), con migración a
+            grandes ciudades.
+      \item Lengua con uso en \textbf{retracción} y \textbf{escasos recursos
+            digitales}.
+      \item La traducción automática qom\,$\leftrightarrow$\,español es un
+            recurso valioso para \textbf{documentar y revitalizar} la lengua.
+      \item Pero confiar en un traductor exige poder \textbf{evaluarlo}:
+            ¿cómo saber si sus traducciones son \textbf{adecuadas}?
+    \end{itemize}
+  \end{pblock}
+
+  \blockgap
+
+  \begin{pblock}{2. Contexto}
+    Contamos con un traductor qom\,$\leftrightarrow$\,español:
+    \textbf{NLLB-200}\cita{1} (\texttt{distilled-600M}) \textit{fine-tuneado}
+    sobre el corpus paralelo \textbf{\textit{QomL'aqtaqa}}\cita{2} (QomL), armado a
+    partir de fuentes de \textbf{registros diversos}, con versiones diferentes
+    según el corpus y el tipo de partición (estratificado o aleatorio)
+    usado en su entrenamiento:
     \vspace{0.4cm}
-    \begin{itemize}
-      \item \ph{qué rompe la polisíntesis en las métricas de n-gramas}
-      \item \ph{qué rompe la variación ortográfica}
-    \end{itemize}
-  \end{pblock}
-
-  \blockgap
-
-  \begin{pblock}{3. Pregunta y objetivo}
-    \ph{¿Qué tan confiables son las métricas automáticas para el par
-        qom-español? Objetivo: evaluar el modelo existente y diagnosticar
-        DÓNDE y POR QUÉ las métricas divergen de la calidad real.}
-  \end{pblock}
-
-  \blockgap
-
-  \begin{pblock}{4. Datos y método}
-    \ph{Diagrama de flujo del pipeline (ver abajo).}
-    \vspace{0.5cm}
     \begin{center}
-    \begin{tikzpicture}[
-        node distance=0.8cm,
-        box/.style={draw=tudBlue,very thick,rounded corners,fill=white,
-                    align=center,minimum height=2.2cm,text width=5.5cm,font=\large}]
-      \node[box] (corpus) {Corpus\\\textit{QomL'aqtaqa}};
-      \node[box,right=of corpus] (model) {Modelo\\NLLB fine-tuneado};
-      \node[box,right=of model] (pred) {Predicciones\\qom$\leftrightarrow$es};
-      \draw[-latex,very thick,tudBlue] (corpus) -- (model);
-      \draw[-latex,very thick,tudBlue] (model) -- (pred);
-    \end{tikzpicture}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{llrccc}
+      \toprule
+      \textbf{\textit{Corpus}} & \textbf{Descripción} & \textbf{\# segm.} & \textbf{Modelo}
+        & \textbf{Estrat.} & \textbf{Aleat.} \\
+      \midrule
+      QomL-Biblia       & Texto de la Biblia & 30.449 & qom-mt-biblia &      & \yes \\
+      QomL-Base         & Relatos tradicionales e infantiles y manual de salud & 2.882  & qom-mt-v1     & \yes & \yes \\
+      QomL-Base+Biblia  & Relatos y manual + Biblia & 33.331 & qom-mt-v2     & \yes & \yes \\
+      \bottomrule
+    \end{tabular}
     \end{center}
-    \vspace{0.3cm}
+    \vspace{0.4cm}
+    Adicionalmente, se dispone de la Declaración Universal de los Derechos Humanos paralelizada
+    en qom y español, no utilizada en estos modelos.
+  \end{pblock}
+
+  \blockgap
+
+  \begin{pblock}{3. El problema}
     \begin{itemize}
-      \item \textbf{Métricas de n-gramas:} \ph{BLEU, ChrF++}
-      \item \textbf{Métricas por \textit{embeddings}:} \ph{BERTScore, MoverScore}
-      \item \textbf{Análisis cualitativo:} \ph{casos donde la métrica y la calidad divergen}
+      \item \textbf{¿Cómo dar cuenta de la calidad} de las traducciones que
+            generan estos modelos? $\rightarrow$ con \textbf{métricas de
+            evaluación} que midan cuán buenas son las predicciones.
+      \item \textbf{¿Cuál es el desafío?} $\rightarrow$ las métricas existentes
+            no resultan robustas o presentan limitaciones en contextos de
+            \textbf{lenguas de bajos recursos}.
     \end{itemize}
+    \vspace{0.4cm}
+    \begin{center}
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabularx}{\linewidth}{l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+      \toprule
+      \textbf{Métrica} & \textbf{Descripción} & \textbf{Limitación} \\
+      \midrule
+      \multicolumn{3}{l}
+          {\textit{Basadas en solapamiento de n-gramas entre texto esperado y predicho}} \\
+          BLEU\cita{3}
+              & Uso de n-gramas de palabras.
+              & Penalización de variación léxica y morfológica. \\
+          ChrF++\,$^\dagger$\cita{4}
+              & Uso de n-gramas de caracteres (y palabras).
+              & Mayor robustez para morfología rica; penalización de la variación ortográfica. \\
+      \midrule
+      \multicolumn{3}{l}
+          {\textit{Basadas en embeddings para representar texto esperado y predicho}} \\
+          \begin{tabular}[t]{@{}l@{}}BERTScore\cita{5}\\MoverScore\cita{6}\\COMET\cita{7}\end{tabular}
+              & Representación vectorial y cálculo de similitud entre ambos textos. Cada métrica presenta variaciones propias.
+              & Necesidad de un modelo pre-entrenado con gran cantidad de datos, difícil de obtener en contexto de bajos recursos. \\
+      \bottomrule
+    \end{tabularx}
+    \end{center}
+    \vspace{0.2cm}
+    {\footnotesize $^\dagger$ Estándar reportado actualmente en competencias de
+    NLP de lenguas de bajos recursos.\par}
+    \begin{phighlight}
+      AmericasNLP 2025\cita[white]{8}: correlación \textit{baseline} con juicios humanos
+      \boldmath ChrF++ $r$=$\sim$0.6, $\rho$=$\sim$0.52
+    \end{phighlight}
+  \end{pblock}
+
+  \blockgap
+
+  \begin{pblock}{4. Propuesta}
+    ¿Qué podemos hacer frente a esta situación?
+    \begin{itemize}
+      \item Desarrollar \textbf{métricas de evaluación}: (a)~a partir de
+            \textbf{anotaciones humanas} y (b)~\textbf{automáticas}.
+      \item \textbf{Contemplar las particularidades} de las lenguas
+            involucradas en esos desarrollos.
+      \item \textbf{Correlacionar} ambos tipos de métricas y \textbf{analizar}
+            esa correlación.
+    \end{itemize}
+  \end{pblock}
+
+  \blockgap
+
+  \begin{pblock}{Referencias}
+    \begin{minipage}[c]{0.72\linewidth}
+      % --- Referencias compactas (sincronizadas con poster/reference.bib) ---
+      {
+           \cita{1}~NLLB Team 2022 \;
+           \cita{2}~Cotik et al.\ 2026 \;
+           \cita{3}~Papineni et al.\ 2002 \;
+           \cita{4}~Popović 2017 \;
+           \cita{5}~Zhang et al.\ 2019 \;
+           \cita{6}~Zhao et al.\ 2019 \;
+           \cita{7}~Rei et al.\ 2020 \;
+           \cita{8}~de Gibert et al.\ 2025 \;
+           \cita{9}~Lommel et al.\ 2013 \;
+           \cita{10}~Feng et al.\ 2022 \;
+           \cita{11}~Lo 2019 \;
+           \cita{12}~Krasner et al.\ 2025 \;
+           \cita{13}~Raja \& Vats 2025 \par
+      }
+    \end{minipage}\hfill
+    \begin{minipage}[c]{0.26\linewidth}
+      \centering
+      \begin{minipage}{0.47\linewidth}
+        \centering
+        \IfFileExists{figures/qr-zotero.png}%
+          {\includegraphics[width=\linewidth]{figures/qr-zotero.png}}%
+          {\logoplaceholder{6}{6}}\\[0.25cm]
+        {\small Bibliografía\par}
+      \end{minipage}\hfill
+      \begin{minipage}{0.47\linewidth}
+        \centering
+        \IfFileExists{figures/qr-repo.png}%
+          {\includegraphics[width=\linewidth]{figures/qr-repo.png}}%
+          {\logoplaceholder{6}{6}}\\[0.25cm]
+        {\small Repositorio\par}
+      \end{minipage}
+    \end{minipage}
   \end{pblock}
 
 \end{column}
-
+\hfill
 %======================= COLUMNA DERECHA =======================
-\begin{column}{0.47\paperwidth}
+\begin{column}{0.48\textwidth}
 
-  \begin{pblock}{5. Resultados (parciales)}
-    \ph{Tabla con BLEU y ChrF++ por dirección de traducción. Reemplazar los
-        valores cuando termines de calcularlos.}
-    \vspace{0.5cm}
+  \begin{pblock}{5. Métricas a partir de evaluaciones humanas}
+    \textbf{Candidato:} MQM\cita{9}. \quad \textbf{Estatus:} elaboración del
+    criterio de anotación.
+    \vspace{0.3cm}
+    \begin{itemize}
+      \item \textbf{Grupo de anotadores:} un grupo heterogéneo aporta
+            anotaciones diversas, pero con pocos hablantes dificulta medir el
+            acuerdo. \textbf{Propuesta actual:} grupo homogéneo, con
+            conocimiento técnico de la lengua, capaz de anotar en ambas
+            direcciones y perteneciente a la comunidad qom.
+      \item \textbf{¿Mismos criterios en ambos sentidos?} Flexibilizar la
+            ortografía en qom (sin estandarización plena); contemplar terminología
+            cultural sin traducción unívoca.
+    \end{itemize}
+    \vspace{0.3cm}
+    {\bfseries Ejemplos (anotación piloto, 28 segmentos por dirección; entre
+    paréntesis, criterio MQM más cercano):}
+    \vspace{0.3cm}
+    \begin{pinner}
+      \small
+      \textbf{qom\,$\rightarrow$\,español}
+      \begin{itemize}
+        \item Sustitución léxica + alucinación (MQMN\_111100):
+              ``nido de guazuncho y cuero'' en lugar de ``gallineros y corrales''.
+        \item Desajuste sintáctico / estructura de la información (MQMN\_201030):
+              ``para los qom'' traducido como ``esa gente toba''.
+      \end{itemize}
+      \textbf{español\,$\rightarrow$\,qom}
+      \begin{itemize}
+        \item Limitación morfosintáctica (MQMN\_201020): orden de palabras
+              inadecuado para la lengua objetivo, p.\,ej.\ la posición de
+              ``ndoteec'' (``solamente'') en ``Ndoteec da a\~{y}em 'auchoxoden''.
+      \end{itemize}
+    \end{pinner}
+  \end{pblock}
+
+  \blockgap
+
+  \begin{pblock}{6. Métricas automáticas y primeros avances}
+    \begin{itemize}
+      \item \textbf{Basadas en n-gramas:} en curso -- utilizar valores estándares
+            y alternativos para evaluar y correlacionar con evaluaciones realizadas
+            por humanos (parámetros: BLEU $\rightarrow$ \# de n-gramas de palabras;
+            ChrF $\rightarrow$ \# de n-gramas de palabra y $\beta$).
+      \item \textbf{Basadas en \textit{embeddings}:} en estudio --- qué datos
+            (digitalización de nuevas fuentes), qué particiones (estratificación,
+            evitar el uso de Biblia en \textit{test} y \textit{data leakage} con
+            modelo de traducción) y cuál es el rendimiento sin \textit{fine-tuning}.
+            Modelos de referencia (AmericasNLP 2025): ajuste de \textbf{LaBSE}\cita{10}
+            e integración en \textbf{YiSi-1}\cita{11}, COMET o esquemas de
+            similitud/regresión (Krasner et al.\cita{12}; Raja \& Vats\cita{13}).
+    \end{itemize}
+    \vspace{0.4cm}
+    \ph{En proceso: análisis de correlación entre métricas automáticas y juicios humanos.}\par
+    \textbf{Primeros avances} --- modelo elegido: \textbf{v2}
+    (QomL-Base\,+\,Biblia, partición no estratificada). Métricas de superficie
+    por dirección:
+    \vspace{0.3cm}
     \begin{center}
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabularx}{0.85\linewidth}{Xcc}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabularx}{0.9\linewidth}{Xcc}
       \toprule
       \textbf{Dirección} & \textbf{BLEU} & \textbf{ChrF++} \\
       \midrule
@@ -218,38 +359,6 @@
       \bottomrule
     \end{tabularx}
     \end{center}
-    \vspace{0.6cm}
-    \textbf{Ejemplo cualitativo (tu argumento más fuerte):}
-    \vspace{0.3cm}
-    \begin{tcolorbox}[enhanced,colback=white,colframe=tudBorder,boxrule=1.5pt,
-                      arc=8pt,left=0.6cm,right=0.6cm,top=0.5cm,bottom=0.5cm]
-      \ph{Referencia vs. predicción donde la métrica castiga una traducción
-          que en realidad es correcta (variación ortográfica / sinónimo /
-          reordenamiento). Mostrar 1 o 2 ejemplos.}
-    \end{tcolorbox}
-  \end{pblock}
-
-  \blockgap
-
-  \begin{pblock}{6. Propuesta}
-    \ph{Guía de anotación adaptada al qom, siguiendo la metodología de
-        semántica/fluidez de la Shared Task 3 de AmericasNLP 2025.}
-    \begin{itemize}
-      \item \ph{qué dimensiones se anotan (adecuación / fluidez)}
-      \item \ph{cómo se adapta a la tipología del qom y al perfil de los hablantes}
-    \end{itemize}
-  \end{pblock}
-
-  \blockgap
-
-  \begin{pblock}{7. Hoja de ruta}
-    \ph{Hacia métricas basadas en embeddings entrenados sobre el par
-        qom-español.}
-    \begin{itemize}
-      \item \ph{reentrenar representaciones sobre qom-español}
-      \item \ph{combinar con similitud semántica (YiSi-1 / COMET)}
-      \item \ph{correlacionar con juicios humanos (Pearson/Spearman/Kendall)}
-    \end{itemize}
   \end{pblock}
 
 \end{column}
@@ -258,25 +367,38 @@
 \blockgap
 
 %------------------------------------------------------------
-%  BLOQUE ANCHO: CONTRIBUCIONES Y CONTACTO
+%  BLOQUE ANCHO: PRÓXIMOS PASOS Y CONTACTO
 %------------------------------------------------------------
-\begin{pblock}{Contribuciones y contacto}
-  \begin{minipage}[c]{0.72\linewidth}
-    \begin{itemize}
-      \item \ph{contribución 1 (diagnóstico de métricas para qom)}
-      \item \ph{contribución 2 (guía de anotación)}
-      \item \ph{recursos liberados a la comunidad}
-    \end{itemize}
-    \vspace{0.4cm}
-    {\small \ph{Referencias clave: de Gibert et al. 2025; Popović 2017;
-      Zhang et al. 2019; NLLB Team 2022.} \par}
-  \end{minipage}\hfill
-  \begin{minipage}[c]{0.24\linewidth}
-    \centering
-    \logoplaceholder{6}{6}\\[0.3cm]
-    {\small \ph{QR al repo}}
-  \end{minipage}
-\end{pblock}
+%\begin{pblock}{Próximos pasos}
+%  \begin{minipage}[c]{0.72\linewidth}
+%    \begin{itemize}
+%      \item \ph{A definir, estos que están acá son \textit{placeholders}.}
+%      \item Anotación con hablantes y consolidación del criterio de evaluación (MQM).
+%      \item Implementación de métricas por \textit{embeddings} sobre qom-español.
+%      \item Correlación de métricas automáticas $\leftrightarrow$ humanas
+%            (Pearson / Spearman / Kendall).
+%    \end{itemize}
+%  \end{minipage}\hfill
+%  \begin{minipage}[c]{0.26\linewidth}
+%    \centering
+%    \begin{minipage}{0.47\linewidth}
+%      \centering
+%      \IfFileExists{figures/qr-zotero.png}%
+%        {\includegraphics[width=0.75\linewidth]{figures/qr-zotero.png}}%
+%        {\logoplaceholder{6}{6}}\\[0.25cm]
+%      {\small Bibliografía\par}
+%    \end{minipage}\hfill
+%    \begin{minipage}{0.47\linewidth}
+%      \centering
+%      \IfFileExists{figures/qr-repo.png}%
+%        {\includegraphics[width=0.75\linewidth]{figures/qr-repo.png}}%
+%        {\logoplaceholder{6}{6}}\\[0.25cm]
+%      {\small Repositorio\par}
+%    \end{minipage}
+%  \end{minipage}
+%\end{pblock}
+%
+%\vspace{0.3cm}
 
 \end{frame}
 \end{document}
