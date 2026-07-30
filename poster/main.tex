@@ -3,14 +3,12 @@
 %  "Métricas de evaluación para traducción automática qom-español:
 %   líneas de base, limitaciones y hoja de ruta"
 %
-%  Estilo: beamerposter con bloques redondeados al estilo del template
-%  de TU Dublin (fondo blanco, borde de color, barra de título en teal).
-%  Compilar con: pdfLaTeX  (Overleaf: Menu -> Compiler -> pdfLaTeX)
+%  Compilar con: pdfLaTeX
 %=============================================================
 \documentclass[final]{beamer}
 
 % ---- Tamaño y orientación del póster --------------------------------
-\usepackage[orientation=portrait,size=a0,scale=1.25]{beamerposter}
+\usepackage[orientation=portrait,size=a0,scale=1.1]{beamerposter}
 
 % ---- Idioma y tipografía --------------------------------------------
 \usepackage[T1]{fontenc}
@@ -96,7 +94,7 @@
 }
 
 % Separación vertical estándar entre bloques
-\newcommand{\blockgap}{\vspace{1cm}}
+\newcommand{\blockgap}{\vspace{0.4cm}}
 
 %=============================================================
 \begin{document}
@@ -109,7 +107,7 @@
 \begin{columns}[c]
   \begin{column}{0.7\paperwidth}
     {\raggedright
-     {\veryHuge\bfseries\color{tudDark} Métricas de evaluación para traducción
+     {\Huge\bfseries\color{tudDark} Métricas de evaluación para traducción
       automática qom\,$\leftrightarrow$\,español\par}
      \vspace{0.5cm}
      {\LARGE\color{tudBlue} \textit{Baselines}, limitaciones y una hoja de ruta\par}
@@ -124,8 +122,12 @@
   \begin{column}{0.24\paperwidth}
     \centering
     % Si existe el logo en PDF/PNG lo usa; si no, muestra un placeholder
-    \IfFileExists{figures/uba.png}%
-      {\includegraphics[width=0.9\linewidth]{figures/uba.png}}%
+    \IfFileExists{figures/master.png}%
+      {\includegraphics[height=8cm]{figures/master.png}}%
+      {\logoplaceholder{6}{6}}
+    \hfill
+    \IfFileExists{figures/uba.png}
+      {\includegraphics[height=8cm]{figures/uba.png}}%
       {\logoplaceholder{6}{6}}
   \end{column}
 \end{columns}
@@ -150,52 +152,56 @@
             grandes ciudades.
       \item Lengua con uso en \textbf{retracción} y \textbf{escasos recursos
             digitales}.
-      \item La traducción automática qom\,$\leftrightarrow$\,español es un
-            recurso valioso para \textbf{documentar y revitalizar} la lengua.
-      \item Pero confiar en un traductor exige poder \textbf{evaluarlo}:
-            ¿cómo saber si sus traducciones son \textbf{adecuadas}?
+      \item La traducción automática bidireccional qom-español puede ser un recurso valioso para \textbf{documentar y revitalizar} la lengua.
+      \item Para confiar en un traductor, es necesario poder \textbf{evaluarlo}: ¿cómo podemos saber si sus traducciones son \textbf{adecuadas}?
     \end{itemize}
   \end{pblock}
 
-  \blockgap
+  %\blockgap
 
   \begin{pblock}{2. Contexto}
-    Contamos con un traductor qom\,$\leftrightarrow$\,español:
-    \textbf{NLLB-200}\cita{1} (\texttt{distilled-600M}) \textit{fine-tuneado}
-    sobre el corpus paralelo \textbf{\textit{QomL'aqtaqa}}\cita{2} (QomL), armado a
-    partir de fuentes de \textbf{registros diversos}, con versiones diferentes
-    según el corpus y el tipo de partición (estratificado o aleatorio)
-    usado en su entrenamiento:
+    Contamos con un traductor bidireccional qom-español basado en el
+    modelo \textbf{NLLB-200}\cita{1} (\texttt{distilled-600M}) al cual
+    se le realizó un proceso de \textit{fine-tuning} con el corpus
+    paralelo \textbf{\textit{QomL'aqtaqa}}\cita{2} (QomL), armado a
+    partir de fuentes de \textbf{registros diversos}, con versiones
+    diferentes según el corpus y el tipo de partición (estratificado
+    o aleatorio) usado en su entrenamiento:
     \vspace{0.4cm}
     \begin{center}
     \footnotesize
     \renewcommand{\arraystretch}{1.25}
-    \begin{tabular}{llrccc}
+      \begin{tabular}{lrccc}
       \toprule
-      \textbf{\textit{Corpus}} & \textbf{Descripción} & \textbf{\# segm.} & \textbf{Modelo}
-        & \textbf{Estrat.} & \textbf{Aleat.} \\
+      \textbf{Fuente} & \textbf{\# segm.} & \textbf{QomL-Bib.}
+        & \textbf{QomL-Base} & \textbf{Base+Bib.} \\
       \midrule
-      QomL-Biblia       & Texto de la Biblia & 30.449 & qom-mt-biblia &      & \yes \\
-      QomL-Base         & Relatos tradicionales e infantiles y manual de salud & 2.882  & qom-mt-v1     & \yes & \yes \\
-      QomL-Base+Biblia  & Relatos y manual + Biblia & 33.331 & qom-mt-v2     & \yes & \yes \\
+      Biblia                        & 30.449 & \yes &      & \yes \\
+      Arte Verbal Qom               & 1.831  &      & \yes & \yes \\
+      Educación Sanitaria Intercult.& 212    &      & \yes & \yes \\
+      Taller de Lengua y Cultura    & 273    &      & \yes & \yes \\
+      Las aventuras de Copaic       & 16     &      & \yes & \yes \\
+      El Principito                 & 550    &      & \yes & \yes \\
+      Declaración Univ.\ DD.HH.     & 61     &      &      &      \\
+      \midrule
+      \textbf{Total (\# segmentos)\textsuperscript{1}} &        & \textbf{30.449}
+        & \textbf{2.882} & \textbf{33.331} \\
+      \midrule
+      \textbf{Modelo desarrollado\textsuperscript{2}} &        & \textbf{qom-mt-bible}
+        & \textbf{qom-mt-v1} & \textbf{qom-mt-v2} \\
       \bottomrule
     \end{tabular}
     \end{center}
-    \vspace{0.4cm}
-    Adicionalmente, se dispone de la Declaración Universal de los Derechos Humanos paralelizada
-    en qom y español, no utilizada en estos modelos.
+    \vspace{0.2cm}
+    {\footnotesize \textsuperscript{1} El conteo de estos segmentos excluye la Declaración Universal de los Dererchos Humanos dado que no fue utilizada en el desarrollo y testeo de los modelos. | \textsuperscript{2} Los modelos que incluyen más de una fuente cuentan con versiones entrenadas de forma estratificada y aleatoria.}
   \end{pblock}
 
-  \blockgap
+  %\blockgap
 
   \begin{pblock}{3. El problema}
     \begin{itemize}
-      \item \textbf{¿Cómo dar cuenta de la calidad} de las traducciones que
-            generan estos modelos? $\rightarrow$ con \textbf{métricas de
-            evaluación} que midan cuán buenas son las predicciones.
-      \item \textbf{¿Cuál es el desafío?} $\rightarrow$ las métricas existentes
-            no resultan robustas o presentan limitaciones en contextos de
-            \textbf{lenguas de bajos recursos}.
+      \item ¿\textbf{Cómo dar cuenta de la calidad de las traducciones} que generan estos modelos? Con \textbf{métricas de evaluación} que midan cuán buenas son las predicciones.
+      \item ¿\textbf{Cuál es el desafío en esta tarea?} Las métricas existentes no resultan robustas o presentan limitaciones en contextos de lenguas de bajos recursos.
     \end{itemize}
     \vspace{0.4cm}
     \begin{center}
@@ -231,21 +237,92 @@
     \end{phighlight}
   \end{pblock}
 
-  \blockgap
+  %\blockgap
 
   \begin{pblock}{4. Propuesta}
     ¿Qué podemos hacer frente a esta situación?
     \begin{itemize}
-      \item Desarrollar \textbf{métricas de evaluación}: (a)~a partir de
-            \textbf{anotaciones humanas} y (b)~\textbf{automáticas}.
-      \item \textbf{Contemplar las particularidades} de las lenguas
-            involucradas en esos desarrollos.
-      \item \textbf{Correlacionar} ambos tipos de métricas y \textbf{analizar}
-            esa correlación.
+      \item Desarrollar \textbf{métricas de evaluación}: a partir de (a) \textbf{anotaciones humanas} y (b) \textbf{técnicas automáticas}.
+      \item \textbf{Contemplar las particularidades de las lenguas} involucradas en esos desarrollos, tales como la tipología lingüística,  riqueza morfológica y el nivel de estandarización de su ortografía, dado que impactan en el tipo de errores que podemos encontrar en las traducciones y que tiene sentido considerar en una evaluación manual.
+      \item \textbf{Correlacionar} ambos tipos de métricas y \textbf{analizar} esa correlación.
     \end{itemize}
   \end{pblock}
 
   \blockgap
+
+\end{column}
+\hfill
+%======================= COLUMNA DERECHA =======================
+\begin{column}{0.48\textwidth}
+
+  \begin{pblock}{5. Métricas a partir de evaluaciones humanas}
+    \begin{itemize}
+      \item \textbf{Estatus:} elaboración del criterio de anotación en curso.
+      \item \textbf{\textit{Framwork} de evaluación candidata}: MQM\cita{9}.
+      \item \textbf{Grupo de anotadores:} de ser posible, se preferirá un grupo homogéneo, con conocimiento técnico de la lengua, capaz de anotar traducciones en ambas direcciones y perteneciente a la comunidad qom. Si bien un grupo heterogéneo puede aportar anotaciones diversas que ofrezcan otra riqueza, tener pocos hablantes dificultará medir el acuerdo entre anotadores.
+      \item \textbf{¿Mismos criterios en ambos sentidos?} Flexibilizar la
+            ortografía en qom (sin estandarización plena); contemplar terminología
+            cultural sin traducción unívoca.
+    \end{itemize}
+    \vspace{0.3cm}
+    {\bfseries Ejemplos (anotación piloto, 28 segmentos por dirección; entre
+    paréntesis, criterio MQM más cercano):}
+    \vspace{0.3cm}
+    \begin{pinner}
+      \small
+      \textbf{qom\,$\rightarrow$\,español}
+      \begin{itemize}
+        \item Sustitución léxica + alucinación (MQMN\_111100):
+              ``nido de guazuncho y cuero'' en lugar de ``gallineros y corrales''.
+        \item Desajuste sintáctico / estructura de la información (MQMN\_201030):
+              ``para los qom'' traducido como ``esa gente toba''.
+      \end{itemize}
+      \textbf{español\,$\rightarrow$\,qom}
+      \begin{itemize}
+        \item Limitación morfosintáctica (MQMN\_201020): orden de palabras
+              inadecuado para la lengua objetivo, p.\,ej.\ la posición de
+              ``ndoteec'' (``solamente'') en ``Ndoteec da a\~{y}em 'auchoxoden''.
+      \end{itemize}
+    \end{pinner}
+    \begin{pinner}
+      \textbf{Tener presente los aspectos socioculturales} será fundamental a la hora de pensar qué formatos o soportes se utilizarán en la recolección de anotaciones, a fin que se mitigar lo máximo posible la incomodidad y el esfuerzo de los evaluadores.
+    \end{pinner}
+  \end{pblock}
+
+  %\blockgap
+
+  \begin{pblock}{6. Métricas automáticas y primeros avances}
+    \begin{itemize}
+      \item \textbf{Basadas en n-gramas:} en curso -- utilizar valores estándares
+            y alternativos para evaluar y correlacionar con evaluaciones realizadas
+            por humanos (parámetros: BLEU $\rightarrow$ \# de n-gramas de palabras;
+            ChrF $\rightarrow$ \# de n-gramas de palabra y $\beta$).
+      \item \textbf{Basadas en \textit{embeddings}:} en estudio --- qué datos
+            (digitalización de nuevas fuentes), qué particiones (estratificación,
+            evitar el uso de Biblia en \textit{test} y \textit{data leakage} con
+            modelo de traducción) y cuál es el rendimiento sin \textit{fine-tuning}.
+            Modelos de referencia (AmericasNLP 2025): ajuste de \textbf{LaBSE}\cita{10}
+            e integración en \textbf{YiSi-1}\cita{11}, COMET o esquemas de
+            similitud/regresión (Krasner et al.\cita{12}; Raja \& Vats\cita{13}).
+    \end{itemize}
+    \vspace{0.4cm}
+    \ph{En proceso: análisis de correlación entre métricas automáticas y juicios humanos.}\par
+    \textbf{Primeros avances} --- modelo elegido: \textbf{v2}
+    (QomL-Base\,+\,Biblia, partición no estratificada). Métricas de superficie
+    por dirección:
+    \vspace{0.3cm}
+    \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabularx}{0.9\linewidth}{Xcc}
+      \toprule
+      \textbf{Dirección} & \textbf{BLEU} & \textbf{ChrF++} \\
+      \midrule
+      qom $\rightarrow$ español & \ph{--} & \ph{--} \\
+      español $\rightarrow$ qom & \ph{--} & \ph{--} \\
+      \bottomrule
+    \end{tabularx}
+    \end{center}
+  \end{pblock}
 
   \begin{pblock}{Referencias}
     \begin{minipage}[c]{0.72\linewidth}
@@ -283,87 +360,15 @@
         {\small Repositorio\par}
       \end{minipage}
     \end{minipage}
-  \end{pblock}
+  \end{pblock}  
 
 \end{column}
-\hfill
-%======================= COLUMNA DERECHA =======================
-\begin{column}{0.48\textwidth}
 
-  \begin{pblock}{5. Métricas a partir de evaluaciones humanas}
-    \textbf{Candidato:} MQM\cita{9}. \quad \textbf{Estatus:} elaboración del
-    criterio de anotación.
-    \vspace{0.3cm}
-    \begin{itemize}
-      \item \textbf{Grupo de anotadores:} un grupo heterogéneo aporta
-            anotaciones diversas, pero con pocos hablantes dificulta medir el
-            acuerdo. \textbf{Propuesta actual:} grupo homogéneo, con
-            conocimiento técnico de la lengua, capaz de anotar en ambas
-            direcciones y perteneciente a la comunidad qom.
-      \item \textbf{¿Mismos criterios en ambos sentidos?} Flexibilizar la
-            ortografía en qom (sin estandarización plena); contemplar terminología
-            cultural sin traducción unívoca.
-    \end{itemize}
-    \vspace{0.3cm}
-    {\bfseries Ejemplos (anotación piloto, 28 segmentos por dirección; entre
-    paréntesis, criterio MQM más cercano):}
-    \vspace{0.3cm}
-    \begin{pinner}
-      \small
-      \textbf{qom\,$\rightarrow$\,español}
-      \begin{itemize}
-        \item Sustitución léxica + alucinación (MQMN\_111100):
-              ``nido de guazuncho y cuero'' en lugar de ``gallineros y corrales''.
-        \item Desajuste sintáctico / estructura de la información (MQMN\_201030):
-              ``para los qom'' traducido como ``esa gente toba''.
-      \end{itemize}
-      \textbf{español\,$\rightarrow$\,qom}
-      \begin{itemize}
-        \item Limitación morfosintáctica (MQMN\_201020): orden de palabras
-              inadecuado para la lengua objetivo, p.\,ej.\ la posición de
-              ``ndoteec'' (``solamente'') en ``Ndoteec da a\~{y}em 'auchoxoden''.
-      \end{itemize}
-    \end{pinner}
-  \end{pblock}
-
-  \blockgap
-
-  \begin{pblock}{6. Métricas automáticas y primeros avances}
-    \begin{itemize}
-      \item \textbf{Basadas en n-gramas:} en curso -- utilizar valores estándares
-            y alternativos para evaluar y correlacionar con evaluaciones realizadas
-            por humanos (parámetros: BLEU $\rightarrow$ \# de n-gramas de palabras;
-            ChrF $\rightarrow$ \# de n-gramas de palabra y $\beta$).
-      \item \textbf{Basadas en \textit{embeddings}:} en estudio --- qué datos
-            (digitalización de nuevas fuentes), qué particiones (estratificación,
-            evitar el uso de Biblia en \textit{test} y \textit{data leakage} con
-            modelo de traducción) y cuál es el rendimiento sin \textit{fine-tuning}.
-            Modelos de referencia (AmericasNLP 2025): ajuste de \textbf{LaBSE}\cita{10}
-            e integración en \textbf{YiSi-1}\cita{11}, COMET o esquemas de
-            similitud/regresión (Krasner et al.\cita{12}; Raja \& Vats\cita{13}).
-    \end{itemize}
-    \vspace{0.4cm}
-    \ph{En proceso: análisis de correlación entre métricas automáticas y juicios humanos.}\par
-    \textbf{Primeros avances} --- modelo elegido: \textbf{v2}
-    (QomL-Base\,+\,Biblia, partición no estratificada). Métricas de superficie
-    por dirección:
-    \vspace{0.3cm}
-    \begin{center}
-    \renewcommand{\arraystretch}{1.4}
-    \begin{tabularx}{0.9\linewidth}{Xcc}
-      \toprule
-      \textbf{Dirección} & \textbf{BLEU} & \textbf{ChrF++} \\
-      \midrule
-      qom $\rightarrow$ español & \ph{--} & \ph{--} \\
-      español $\rightarrow$ qom & \ph{--} & \ph{--} \\
-      \bottomrule
-    \end{tabularx}
-    \end{center}
-  \end{pblock}
-
-\end{column}
 \end{columns}
-
+normalsize = \csname f@size\endcsname\,pt \quad
+{\small small = \csname f@size\endcsname\,pt} \quad
+{\footnotesize footnotesize = \csname f@size\endcsname\,pt} \quad
+{\veryHuge título = \csname f@size\endcsname\,pt}
 \blockgap
 
 %------------------------------------------------------------
