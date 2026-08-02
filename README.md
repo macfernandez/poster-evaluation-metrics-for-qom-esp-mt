@@ -1,7 +1,7 @@
 # Métricas de evaluación para traducción automática qom $\leftrightarrow$ español
 
-[![Trabajo final (PDF)](https://img.shields.io/badge/Trabajo%20final-PDF-b31b1b)](https://macfernandez.github.io/poster-evaluation-metrics-for-qom-esp-mt/poster.pdf)
-[![Build poster PDF](https://github.com/macfernandez/poster-evaluation-metrics-for-qom-esp-mt/actions/workflows/build-project.yml/badge.svg)](https://github.com/macfernandez/poster-evaluation-metrics-for-qom-esp-mt/actions/workflows/build-poster.yml)
+[![Poster (PDF)](https://img.shields.io/badge/Trabajo%20final-PDF-b31b1b)](https://macfernandez.github.io/poster-evaluation-metrics-for-qom-esp-mt/poster.pdf)
+[![Build poster PDF](https://github.com/macfernandez/poster-evaluation-metrics-for-qom-esp-mt/actions/workflows/build-poster.yml/badge.svg)](https://github.com/macfernandez/poster-evaluation-metrics-for-qom-esp-mt/actions/workflows/build-poster.yml)
 ![Python](https://img.shields.io/badge/python-3.13-blue)
 
 Póster para presentar en la [segunda edición de la Escuela de NLP de Sudamérica](https://south-american-nlp-school.dc.uba.ar/).
