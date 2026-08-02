@@ -1,4 +1,4 @@
-name: Build thesis PDF
+name: Build poster PDF
 
 on:
   workflow_dispatch:
